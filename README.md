@@ -1,5 +1,4 @@
 # 서비스 소개
-> natural language process
 
 NLP를 통해 인터넷 기사에 달린 [코멘트 Dataset](https://github.com/kocohub/korean-hate-speech)의 긍정/부정을 분류하고자 하였습니다.<br>
 
@@ -18,3 +17,7 @@ sentiment_predict 함수의 parameter로 문자열을 넘겨서, 해당 코멘�
 
 <img width="750" alt="스크린샷 2021-06-15 오후 8 30 22" src="https://user-images.githubusercontent.com/67837091/122045294-84f33380-ce18-11eb-890f-94f864ab793e.png">
 test_data을 가지고 확인해본 결과 <b>0.6933</b>의 accuracy을 얻을 수 있었습니다.
+
+## 참조
+한국어 영화 리뷰 센티멘트 분석 (https://www.lucypark.kr/docs/2015-pyconkr/#36)<br>
+Korean HateSpeech Dataset (https://github.com/kocohub/korean-hate-speech)
