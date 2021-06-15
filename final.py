@@ -28,11 +28,11 @@ test_data.replace('hate', 1, inplace=True)
 test_data.replace('offensive', 1, inplace=True)
 
 train_data['comments'] = train_data['comments'].str.replace("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]","")
-train_data['comments'] = train_data['comments'].str.replace('^ +', "") # white space 데이터를 empty value로 변경
+train_data['comments'] = train_data['comments'].str.replace('^ +', "")
 train_data['comments'].replace('', np.nan, inplace=True)
 
-test_data['comments'] = test_data['comments'].str.replace("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]","") # 정규 표현식 수행
-test_data['comments'] = test_data['comments'].str.replace('^ +', "") # 공백은 empty 값으로 변경
+test_data['comments'] = test_data['comments'].str.replace("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]","")
+test_data['comments'] = test_data['comments'].str.replace('^ +', "")
 
 stopwords = ['의','가','이','은','들','는','좀','잘','걍','과','도','를','으로','자','에','와','한','하다']
 
@@ -40,36 +40,32 @@ okt = Okt()
 
 X_train = []
 for sentence in train_data['comments']:
-    temp_X = okt.morphs(sentence, stem=True) # 토큰화
-    temp_X = [word for word in temp_X if not word in stopwords] # 불용어 제거
+    temp_X = okt.morphs(sentence, stem=True)
+    temp_X = [word for word in temp_X if not word in stopwords]
     X_train.append(temp_X)
 
 X_test = []
 for sentence in test_data['comments']:
-    temp_X = okt.morphs(sentence, stem=True) # 토큰화
-    temp_X = [word for word in temp_X if not word in stopwords] # 불용어 제거
+    temp_X = okt.morphs(sentence, stem=True)
+    temp_X = [word for word in temp_X if not word in stopwords]
     X_test.append(temp_X)
 
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(X_train)
 
 threshold = 3
-total_cnt = len(tokenizer.word_index) # 단어의 수
-rare_cnt = 0 # 등장 빈도수가 threshold보다 작은 단어의 개수를 카운트
-total_freq = 0 # 훈련 데이터의 전체 단어 빈도수 총 합
-rare_freq = 0 # 등장 빈도수가 threshold보다 작은 단어의 등장 빈도수의 총 합
+total_cnt = len(tokenizer.word_index) 
+rare_cnt = 0
+total_freq = 0 
+rare_freq = 0 
 
-# 단어와 빈도수의 쌍(pair)을 key와 value로 받는다.
 for key, value in tokenizer.word_counts.items():
     total_freq = total_freq + value
 
-    # 단어의 등장 빈도수가 threshold보다 작으면
     if(value < threshold):
         rare_cnt = rare_cnt + 1
         rare_freq = rare_freq + value
 
-# 전체 단어 개수 중 빈도수 2이하인 단어는 제거.
-# 0번 패딩 토큰을 고려하여 + 1
 vocab_size = total_cnt - rare_cnt + 1
 
 tokenizer = Tokenizer(vocab_size) 
@@ -117,11 +113,11 @@ loaded_model = load_model('best_model.h5')
 print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
 
 def sentiment_predict(new_sentence):
-  new_sentence = okt.morphs(new_sentence, stem=True) # 토큰화
-  new_sentence = [word for word in new_sentence if not word in stopwords] # 불용어 제거
-  encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
-  pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
-  score = float(loaded_model.predict(pad_new)) # 예측
+  new_sentence = okt.morphs(new_sentence, stem=True)
+  new_sentence = [word for word in new_sentence if not word in stopwords]
+  encoded = tokenizer.texts_to_sequences([new_sentence])
+  pad_new = pad_sequences(encoded, maxlen = max_len)
+  score = float(loaded_model.predict(pad_new))
   if(score > 0.5):
     print("{:.2f}% 확률로 긍정 댓글입니다.\n".format(score * 100))
   else:
