@@ -1,4 +1,5 @@
 # 서비스 소개
+> 2021 봄학기 서울과학기술대학교 자연어처리 수업 프로젝트
 
 NLP를 통해 인터넷 기사에 달린 [코멘트 Dataset](https://github.com/kocohub/korean-hate-speech)의 긍정/부정을 분류하고자 하였습니다.<br>
 
